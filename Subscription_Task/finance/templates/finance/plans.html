@@ -12,7 +12,7 @@
         <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
         {% if user.is_authenticated %}
             {% if Plan1 %}
-              <a class="btn btn-outline-danger"> Unsubscribe </a>
+              <a class="btn btn-outline-danger" href="/unsubscribe/Plan 1"> Unsubscribe </a>
             {% else %}
               <a class="btn btn-success" href="/subscribe/Plan 1"> Subscribe </a>
             {% endif %}
@@ -28,7 +28,7 @@
         <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
         {% if user.is_authenticated %}
             {% if Plan2 %}
-              <a class="btn btn-outline-danger"> Unsubscribe </a>
+              <a class="btn btn-outline-danger" href="/unsubscribe/Plan 2"> Unsubscribe </a>
             {% else %}
               <a class="btn btn-success" href="/subscribe/Plan 2"> Subscribe </a>
             {% endif %}
@@ -44,7 +44,7 @@
         <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
         {% if user.is_authenticated %}
             {% if Plan3 %}
-              <a class="btn btn-outline-danger"> Unsubscribe </a>
+              <a class="btn btn-outline-danger" href="/unsubscribe/Plan 3"> Unsubscribe </a>
             {% else %}
               <a class="btn btn-success" href="/subscribe/Plan 3"> Subscribe </a>
             {% endif %}

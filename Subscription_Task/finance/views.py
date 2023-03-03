@@ -16,7 +16,7 @@ def index(request):
     return render(request=request, template_name="finance/index.html")
 
 
-def Theregister(request):
+def theregister(request):
     if request.method == "POST":
         form = NewUserForm(request.POST)
         if form.is_valid():
@@ -29,7 +29,7 @@ def Theregister(request):
     return render(request=request, template_name="finance/register.html", context={"register_form": form})
 
 
-def Thelogin(request):
+def thelogin(request):
     if request.method == "POST":
         form = AuthenticationForm(request, data=request.POST)
         if form.is_valid():
@@ -48,7 +48,7 @@ def Thelogin(request):
     return render(request=request, template_name="finance/login.html", context={"login_form": form})
 
 
-def Thelogout(request):
+def thelogout(request):
     logout(request)
     messages.info(request, "You have successfully logged out.")
     return redirect("finance:home")
@@ -86,7 +86,13 @@ def subscribe(request, plan):
     customer = Customer.objects.get(id=request.user.id)
     subscriptions = Subscription.objects.filter(customer=customer)
     newsubscription = Subscription.objects.create(customer=customer, name=plan, cost=Plans_Cost[plan], is_active=True)
-    context = {
-        'subscriptions': subscriptions,
-    }
-    return render(request=request, template_name="/pricing", context=context)
+
+    return redirect("finance:pricing")
+
+
+def unsubscribe(request, plan):
+    customer = Customer.objects.get(id=request.user.id)
+    subscriptions = Subscription.objects.filter(customer=customer)
+    deletsubscription = subscriptions.filter(name=plan).delete()
+
+    return redirect("finance:pricing")
