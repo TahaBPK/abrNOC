@@ -9,4 +9,6 @@ urlpatterns = [
     path('login', views.Thelogin, name="login"),
     path('logout', views.Thelogout, name="logout"),
     path('pricing', views.pricing, name="pricing"),
+    path('profile/<user_id>', views.profile, name="profile"),
+    path('subscribe/<plan>', views.subscribe, name="subscribe"),
 ]

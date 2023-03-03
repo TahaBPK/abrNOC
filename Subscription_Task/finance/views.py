@@ -3,7 +3,13 @@ from django.shortcuts import render, redirect
 from .forms import NewUserForm
 from django.contrib.auth import login, authenticate, logout
 from django.contrib import messages
-from .models import Subscription
+from .models import Customer, Subscription, Invoice
+
+Plans_Cost = {
+    "Plan 1": 2,
+    "Plan 2": 5,
+    "Plan 3": 10
+}
 
 
 def index(request):
@@ -49,4 +55,38 @@ def Thelogout(request):
 
 
 def pricing(request):
-    return render(request=request, template_name="finance/plans.html")
+    customer = Customer.objects.get(id=request.user.id)
+    subscriptions = Subscription.objects.filter(customer=customer)
+    plan1 = subscriptions.filter(name="Plan 1")
+    plan2 = subscriptions.filter(name="Plan 2")
+    plan3 = subscriptions.filter(name="Plan 3")
+    context = {
+        'subscriptions': subscriptions,
+        'Plan1': plan1,
+        'Plan2': plan2,
+        'Plan3': plan3,
+    }
+    return render(request=request, template_name="finance/plans.html", context=context)
+
+
+def profile(request, user_id):
+    customer = Customer.objects.get(id=user_id)
+    subscriptions = Subscription.objects.filter(customer=customer)
+    invoices = Invoice.objects.filter(customer=customer)
+    context = {
+        'subscriptions': subscriptions,
+        'invoices': invoices
+    }
+    print(context['subscriptions'])
+    print(context['invoices'])
+    return render(request=request, template_name="finance/profile.html", context=context)
+
+
+def subscribe(request, plan):
+    customer = Customer.objects.get(id=request.user.id)
+    subscriptions = Subscription.objects.filter(customer=customer)
+    newsubscription = Subscription.objects.create(customer=customer, name=plan, cost=Plans_Cost[plan], is_active=True)
+    context = {
+        'subscriptions': subscriptions,
+    }
+    return render(request=request, template_name="/pricing", context=context)
