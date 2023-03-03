@@ -3,11 +3,10 @@ from django.shortcuts import render, redirect
 from .forms import NewUserForm
 from django.contrib.auth import login, authenticate, logout
 from django.contrib import messages
-from django.http import HttpResponse
 
 
 def index(request):
-    return HttpResponse("This works")
+    return render(request=request, template_name="finance/index.html")
 
 
 def Theregister(request):
