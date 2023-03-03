@@ -42,7 +42,7 @@ def Thelogin(request):
     return render(request=request, template_name="finance/login.html", context={"login_form": form})
 
 
-def logout_request(request):
+def Thelogout(request):
     logout(request)
     messages.info(request, "You have successfully logged out.")
     return redirect("finance:home")
