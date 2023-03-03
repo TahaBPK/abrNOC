@@ -12,4 +12,6 @@ urlpatterns = [
     path('profile/<user_id>', views.profile, name="profile"),
     path('subscribe/<plan>', views.subscribe, name="subscribe"),
     path('unsubscribe/<plan>', views.unsubscribe, name="unsubscribe"),
+    path('active/<plan>', views.active, name="active"),
+    path('deactive/<plan>', views.deactive, name="deactive"),
 ]

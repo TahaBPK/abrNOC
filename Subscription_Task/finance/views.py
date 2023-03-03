@@ -74,6 +74,7 @@ def profile(request, user_id):
     subscriptions = Subscription.objects.filter(customer=customer)
     invoices = Invoice.objects.filter(customer=customer)
     context = {
+        'customer': customer,
         'subscriptions': subscriptions,
         'invoices': invoices
     }
@@ -93,6 +94,32 @@ def subscribe(request, plan):
 def unsubscribe(request, plan):
     customer = Customer.objects.get(id=request.user.id)
     subscriptions = Subscription.objects.filter(customer=customer)
-    deletsubscription = subscriptions.filter(name=plan).delete()
+    deletesubscription = subscriptions.filter(name=plan).delete()
 
     return redirect("finance:pricing")
+
+
+def active(request, plan):
+    customer = Customer.objects.get(id=request.user.id)
+    subscriptions = Subscription.objects.filter(customer=customer)
+    invoices = Invoice.objects.filter(customer=customer)
+    updatesubscription = subscriptions.filter(name=plan).update(is_active=True)
+    context = {
+        'customer': customer,
+        'subscriptions': subscriptions,
+        'invoices': invoices
+    }
+    return render(request=request, template_name="finance/profile.html", context=context)
+
+
+def deactive(request, plan):
+    customer = Customer.objects.get(id=request.user.id)
+    subscriptions = Subscription.objects.filter(customer=customer)
+    invoices = Invoice.objects.filter(customer=customer)
+    updatesubscription = subscriptions.filter(name=plan).update(is_active=False)
+    context = {
+        'customer': customer,
+        'subscriptions': subscriptions,
+        'invoices': invoices
+    }
+    return render(request=request, template_name="finance/profile.html", context=context)

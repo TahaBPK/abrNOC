@@ -4,22 +4,25 @@
 
 {% block content %}
   <h2>Welcome, {{ user.username }}!</h2>
-
+  <h3>Credit: {{ customer.credit }}</h3>
   <h3>Subscriptions</h3>
-  <table>
+  <table  class="table table-striped">
     <thead>
       <tr>
-        <th>Name</th>
-        <th>Cost</th>
-        <th>Active</th>
+        <th scope="col">Name</th>
+        <th scope="col">Cost</th>
+        <th scope="col">Active</th>
+        <th scope="col">Operation</th>
       </tr>
     </thead>
     <tbody>
       {% for subscription in subscriptions.all %}
         <tr>
-          <td>{{ subscription.name }}</td>
-          <td>{{ subscription.cost }}</td>
+          <th  scope="row">{{ subscription.name }}</th>
+          <td>{{ subscription.cost }}$</td>
           <td>{{ subscription.is_active }}</td>
+          {% if subscription.is_active %}<td><a class="btn btn-outline-danger" href="/deactive/{{ subscription.name }}"> Deactive </a></td>{% endif %}
+          {% if not subscription.is_active %}<td><a class="btn btn-success" href="/active/{{ subscription.name }}"> Active </a></td>{% endif %}
         </tr>
       {% empty %}
         <tr>
