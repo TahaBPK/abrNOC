@@ -14,7 +14,7 @@ class Customer(models.Model):
 
 
 class Subscription(models.Model):
-    customer = models.ForeignKey(Customer, on_delete=models.CASCADE)
+    customer = models.ForeignKey(Customer, on_delete=models.CASCADE, null=True, blank=True)
     name = models.CharField(max_length=255, primary_key=True)
     cost = models.IntegerField()
     is_active = models.BooleanField(default=True)

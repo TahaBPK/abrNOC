@@ -3,6 +3,7 @@ from django.shortcuts import render, redirect
 from .forms import NewUserForm
 from django.contrib.auth import login, authenticate, logout
 from django.contrib import messages
+from .models import Subscription
 
 
 def index(request):
@@ -45,3 +46,7 @@ def Thelogout(request):
     logout(request)
     messages.info(request, "You have successfully logged out.")
     return redirect("finance:home")
+
+
+def pricing(request):
+    return render(request=request, template_name="finance/plans.html")
