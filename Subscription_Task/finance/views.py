@@ -4,6 +4,7 @@ from .forms import NewUserForm
 from django.contrib.auth import login, authenticate, logout
 from django.contrib import messages
 from .models import Customer, Subscription, Invoice
+import time
 
 Plans_Cost = {
     "Plan 1": 2,
@@ -55,21 +56,26 @@ def thelogout(request):
 
 
 def pricing(request):
-    customer = Customer.objects.get(id=request.user.id)
-    subscriptions = Subscription.objects.filter(customer=customer)
-    plan1 = subscriptions.filter(name="Plan 1")
-    plan2 = subscriptions.filter(name="Plan 2")
-    plan3 = subscriptions.filter(name="Plan 3")
-    context = {
-        'subscriptions': subscriptions,
-        'Plan1': plan1,
-        'Plan2': plan2,
-        'Plan3': plan3,
-    }
+    if request.user.is_authenticated:
+        customer = Customer.objects.get(id=request.user.id)
+        subscriptions = Subscription.objects.filter(customer=customer)
+        plan1 = subscriptions.filter(name="Plan 1")
+        plan2 = subscriptions.filter(name="Plan 2")
+        plan3 = subscriptions.filter(name="Plan 3")
+        context = {
+            'subscriptions': subscriptions,
+            'Plan1': plan1,
+            'Plan2': plan2,
+            'Plan3': plan3,
+        }
+    else:
+        context = {
+        }
     return render(request=request, template_name="finance/plans.html", context=context)
 
 
 def profile(request, user_id):
+    create_invoices(request)
     customer = Customer.objects.get(id=user_id)
     subscriptions = Subscription.objects.filter(customer=customer)
     invoices = Invoice.objects.filter(customer=customer)
@@ -123,3 +129,21 @@ def deactive(request, plan):
         'invoices': invoices
     }
     return render(request=request, template_name="finance/profile.html", context=context)
+
+
+def create_invoices(request):
+    now = round(time.time())
+    subscriptions = Subscription.objects.filter(is_active=True)
+    for subscription in subscriptions:
+        elapsed_time = subscription.start_time + 600
+        if elapsed_time <= now:
+            subscription_type = Subscription.objects.get(name=subscription.name)
+            Invoice.objects.create(customer=subscription.customer, subscription_type=subscription_type,
+                                   price=subscription.cost, start_date=subscription.start_time, end_date=now,)
+
+            subscription.start_time = elapsed_time
+            subscription.save()
+
+            customer = Customer.objects.filter(id=request.user.id)
+            customer.credit -= subscription.cost
+            customer.save()

@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User
+import time
 
 
 # Create your models here.
@@ -18,6 +19,7 @@ class Subscription(models.Model):
     name = models.CharField(max_length=255, primary_key=True)
     cost = models.IntegerField()
     is_active = models.BooleanField(default=True)
+    start_time = models.BigIntegerField(default=round(time.time()))  # get the now time in seconds
 
     def __str__(self):
         return self.name
@@ -25,11 +27,11 @@ class Subscription(models.Model):
 
 class Invoice(models.Model):
     id = models.AutoField(primary_key=True)
-    customer = models.ForeignKey(Customer, on_delete=models.CASCADE)
-    subscription_type = models.ForeignKey(Subscription, on_delete=models.CASCADE)
+    customer = models.ForeignKey(Customer, on_delete=models.SET_NULL, null=True)
+    subscription_type = models.ForeignKey(Subscription, on_delete=models.SET_NULL, null=True)
     price = models.IntegerField()
-    start_date = models.DateField()
-    end_date = models.DateField()
+    start_date = models.BigIntegerField()
+    end_date = models.BigIntegerField()
 
     def __str__(self):
         return str(self.id)
