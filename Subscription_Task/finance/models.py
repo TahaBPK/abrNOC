@@ -8,7 +8,7 @@ import time
 
 class Customer(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
-    credit = models.IntegerField()
+    credit = models.IntegerField(default=100)
 
     def __str__(self):
         return self.user.username

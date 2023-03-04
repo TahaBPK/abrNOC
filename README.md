@@ -12,12 +12,16 @@
   
   git clone https://github.com/TahaBPK/abrNOC.git
   
-  now change your directory to the one that contain's manage.py file.
+  now change your directory to the one that contains manage.py file.
   try to do it using this command:
   
   cd abrNOC/Subscription_Task
   
   now at this point, you have downloaded django and you have the project.
+  but there is one more thing to do before running the server:
+
+  python manage.py migrate
+
   the only thing you need to do is to start the server
   use this command and run the server:
   
@@ -27,7 +31,7 @@
   
 ## How to use
   in this project you can login or register if you don't hava an account.
-  then you can see the our plans in the pricing page and subscribe to the one that meet your requirments.
-  you can see the plans you subscibed in profile page
+  then you can see our plans in the pricing page and subscribe to the one that meet your requirments.
+  you can see the plans you subscribed in profile page
   
   Be Careful! according to your subscription, you will pay the price for every 10 minutes. 
