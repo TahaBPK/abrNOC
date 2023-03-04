@@ -56,12 +56,13 @@ def thelogout(request):
 
 
 def pricing(request):
-    if request.user.is_authenticated:
+    if request.user.is_authenticated:  # check if user is subscribing to a plan or not
         customer = Customer.objects.get(id=request.user.id)
         subscriptions = Subscription.objects.filter(customer=customer)
         plan1 = subscriptions.filter(name="Plan 1")
         plan2 = subscriptions.filter(name="Plan 2")
         plan3 = subscriptions.filter(name="Plan 3")
+
         context = {
             'subscriptions': subscriptions,
             'Plan1': plan1,
@@ -75,17 +76,19 @@ def pricing(request):
 
 
 def profile(request, user_id):
+    # to avoid using celery to make app installing easier every time the login page shows up,
+    # the invoices will be calculated!
     create_invoices(request)
+
     customer = Customer.objects.get(id=user_id)
     subscriptions = Subscription.objects.filter(customer=customer)
     invoices = Invoice.objects.filter(customer=customer)
+
     context = {
         'customer': customer,
         'subscriptions': subscriptions,
         'invoices': invoices
     }
-    print(context['subscriptions'])
-    print(context['invoices'])
     return render(request=request, template_name="finance/profile.html", context=context)
 
 
@@ -110,6 +113,8 @@ def active(request, plan):
     subscriptions = Subscription.objects.filter(customer=customer)
     invoices = Invoice.objects.filter(customer=customer)
 
+    # to calculate the elapsed time correctly I get the time that subscription was deactivated and only calculate
+    # the active time
     sub = Subscription.objects.get(name=plan)
     sub.start_time = round(time.time() - sub.stop_timer) + sub.start_time
     sub.save()
@@ -128,6 +133,8 @@ def deactive(request, plan):
     subscriptions = Subscription.objects.filter(customer=customer)
     invoices = Invoice.objects.filter(customer=customer)
 
+    # to calculate the elapsed time correctly I store the time that subscription was deactivated and only calculate
+    # the active time
     sub = Subscription.objects.get(name=plan)
     sub.stop_timer = round(time.time())
     sub.save()
@@ -154,6 +161,7 @@ def create_invoices(request):
             subscription.start_time = elapsed_time
             subscription.save()
 
+            # calculate the user credit
             customer = Customer.objects.get(id=request.user.id)
             customer.credit -= subscription.cost
             customer.save()
