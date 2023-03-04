@@ -19,7 +19,8 @@ class Subscription(models.Model):
     name = models.CharField(max_length=255, primary_key=True)
     cost = models.IntegerField()
     is_active = models.BooleanField(default=True)
-    start_time = models.BigIntegerField(default=round(time.time()))  # get the now time in seconds
+    start_time = models.BigIntegerField(default=round(time.time()))
+    stop_timer = models.BigIntegerField(default=round(time.time()))
 
     def __str__(self):
         return self.name

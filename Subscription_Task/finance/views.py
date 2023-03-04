@@ -109,6 +109,11 @@ def active(request, plan):
     customer = Customer.objects.get(id=request.user.id)
     subscriptions = Subscription.objects.filter(customer=customer)
     invoices = Invoice.objects.filter(customer=customer)
+
+    sub = Subscription.objects.get(name=plan)
+    sub.start_time = round(time.time() - sub.stop_timer) + sub.start_time
+    sub.save()
+
     updatesubscription = subscriptions.filter(name=plan).update(is_active=True)
     context = {
         'customer': customer,
@@ -122,6 +127,11 @@ def deactive(request, plan):
     customer = Customer.objects.get(id=request.user.id)
     subscriptions = Subscription.objects.filter(customer=customer)
     invoices = Invoice.objects.filter(customer=customer)
+
+    sub = Subscription.objects.get(name=plan)
+    sub.stop_timer = round(time.time())
+    sub.save()
+
     updatesubscription = subscriptions.filter(name=plan).update(is_active=False)
     context = {
         'customer': customer,
@@ -144,6 +154,6 @@ def create_invoices(request):
             subscription.start_time = elapsed_time
             subscription.save()
 
-            customer = Customer.objects.filter(id=request.user.id)
+            customer = Customer.objects.get(id=request.user.id)
             customer.credit -= subscription.cost
             customer.save()
