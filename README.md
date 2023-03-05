@@ -1,6 +1,6 @@
 # abrNOC
 
-## How to use
+## How to install
   first you need to make a virtual environment for safty and security.
   after activating the virtual environment run this command:
   
